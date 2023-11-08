@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:MAUISql.ViewModels"
+             xmlns:communication="clr-namespace:Microsoft.Maui.ApplicationModel.Communication;assembly=Microsoft.Maui.Essentials"
+             x:Class="MAUISql.ContactsListPage"
+             x:DataType="vm:ContactsViewModel"
+             Title="Contacts">
+    <ScrollView>
+    <Grid Grid.Row="1"
+          RowDefinitions="*, Auto">
+        <CollectionView Grid.Row="0"
+                ItemsSource="{Binding FilteredContacts}">
+            <CollectionView.ItemsLayout>
+                <LinearItemsLayout ItemSpacing="10"
+                           Orientation="Vertical"/>
+            </CollectionView.ItemsLayout>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="communication:Contact">
+                        <Grid RowDefinitions="Auto, Auto"
+                            RowSpacing="5"
+                          Padding="5"
+                          BackgroundColor="#ECECEC"
+                          Margin="5">
+                            <Label Grid.Row="0" Text="{Binding DisplayName}"/>
+                            <Label Grid.Row="1" Text="{Binding Phones[0]}"/>
+                        </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+            <CollectionView.EmptyView>
+                <ContentView>
+                    <VerticalStackLayout HorizontalOptions="Center"
+                                 VerticalOptions="Center">
+                            <Label Text="No Contacts Found"
+                       FontSize="18"
+                       FontAttributes="Bold"
+                       HorizontalTextAlignment="Center"/>
+                    </VerticalStackLayout>
+                </ContentView>
+            </CollectionView.EmptyView>
+        </CollectionView>
+        </Grid>
+    </ScrollView>
+</ContentPage> 

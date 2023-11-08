@@ -1,0 +1,215 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:MAUISql.ViewModels"
+             xmlns:models="clr-namespace:MAUISql.Models"
+             x:DataType="vm:BooksViewModel"
+             x:Class="MAUISql.MainPage"
+             Title="Book Library">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="{OnPlatform Default='Author info'}" Clicked="RedirectToAuthorInfoPage"/>
+        <ToolbarItem Text="{OnPlatform Default='Contacts'}" Clicked="RedirectToFilteredContactsPage"/>
+    </ContentPage.ToolbarItems>
+
+    <ScrollView>
+    <Grid RowDefinitions="Auto, *">
+
+        <VerticalStackLayout Grid.RowSpan="2"
+                             VerticalOptions="Center"
+                             HorizontalOptions="Center"
+                             IsVisible="{Binding IsBusy}">
+            <ActivityIndicator IsRunning="True"
+                               VerticalOptions="Center"
+                               HorizontalOptions="Center"/>
+            <Label Text="{Binding BusyText}"
+                   VerticalOptions="Center"
+                   HorizontalOptions="Center"/>
+        </VerticalStackLayout>
+
+            <Grid RowDefinitions="Auto,Auto"
+                  ColumnDefinitions="Auto,*">
+                <Label Grid.Row="0" Grid.Column="0"
+                       Text="Books"
+                       FontAttributes="Bold"
+                       FontSize="18"
+                       Padding="10"/>
+
+                <Picker Grid.Row="1" Grid.Column="0"
+                        x:Name="FilterPicker"
+                        HorizontalOptions="End"
+                        SelectedIndex="0"
+                        ItemsSource="{Binding FilterOptions}"
+                        SelectedItem="{Binding SelectedFilterOption}"
+                        SelectedIndexChanged="FilterPicker_OnSelectedIndexChanged">
+                </Picker>
+                <Label Grid.Row="0" Grid.Column="1"
+                       Text="Percentage:"
+                       HorizontalOptions="End"
+                       Margin="10"/>
+                <Label Grid.Row="1" Grid.Column="1"
+                       Text="{Binding PickedPercentage}"
+                       FontAttributes="Bold"
+                       HorizontalOptions="End"
+                       Margin="10"/>
+            </Grid>
+
+            <Grid Grid.Row="1"
+              RowDefinitions="*, Auto">
+            <CollectionView Grid.Row="0"
+                            ItemsSource="{Binding Books}">
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout ItemSpacing="10"
+                                       Orientation="Vertical"/>
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:Book">
+                        <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto"
+                              ColumnDefinitions="Auto, *, Auto"
+                              RowSpacing="5"
+                              Padding="5"
+                              BackgroundColor="#ECECEC">
+
+                            <CheckBox Grid.Row="0"
+                                      Grid.Column="0"
+                                      IsChecked="{Binding IsSelected}"
+                                      CheckedChanged="ChangePercentageProperty"/>
+
+                                <Label Grid.Row="1"
+                                   Grid.Column="1"
+                                   Text="{Binding Name}"
+                                   FontAttributes="Bold" />
+                            <Label Grid.Row="2"
+                                   Grid.Column="1"
+                                   Text="{Binding Author}"
+                                   FontSize="12"
+                                   FontAttributes="Bold" />
+                            <Label Grid.Row="3"
+                                   Grid.Column="1"
+                                   Text="{Binding PublishingYear, StringFormat='Published in {0}'}"
+                                   FontSize="12"
+                                   FontAttributes="Bold" />
+                            <Label Grid.Row="4"
+                                   Grid.Column="1"
+                                   Text="{Binding PagesCount, StringFormat='{0} pages'}"
+                                   FontSize="12"
+                                   FontAttributes="Bold" />
+                            <Label Grid.Row="5"
+                                   Grid.Column="1"
+                                   Text="{Binding PublishingAddress}"
+                                   FontSize="12"
+                                   FontAttributes="Bold" />
+
+                            <Button Grid.Row="0"
+                                    Grid.Column="2"
+                                    Text="Edit"
+                                    Padding="0"
+                                    HeightRequest="25"
+                                    FontSize="12"
+                                    CornerRadius="2"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:BooksViewModel}}, Path=SetOperatingBookCommand}"
+                                    CommandParameter="{Binding .}"/>
+
+                            <Button Grid.Row="1"
+                                    Grid.Column="2"
+                                    Text="Del"
+                                    Padding="0"
+                                    HeightRequest="25"
+                                    FontSize="12"
+                                    CornerRadius="2"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:BooksViewModel}}, Path=DeleteBookCommand}"
+                                    CommandParameter="{Binding Id}" />
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+                <CollectionView.EmptyView>
+                    <ContentView>
+                        <VerticalStackLayout HorizontalOptions="Center"
+                                             VerticalOptions="Center">
+                            <Label Text="No Books Found"
+                                   FontSize="18"
+                                   FontAttributes="Bold"
+                                   HorizontalTextAlignment="Center"/>
+                            <Label Text="Try adding a book using the form below"/>
+                        </VerticalStackLayout>
+                    </ContentView>
+                </CollectionView.EmptyView>
+            </CollectionView>
+
+            <VerticalStackLayout Grid.Row="1">
+                <BoxView Color="{DynamicResource Primary}"
+                         HeightRequest="1"/>
+                <Grid RowDefinitions="Auto, Auto, Auto, Auto, Auto, Auto"
+                      ColumnDefinitions="*, Auto"
+                      Padding="10"
+                      RowSpacing="10"
+                      ColumnSpacing="10"
+                      BackgroundColor="#CCBFFA">
+                    <VerticalStackLayout Grid.Row="0"
+                                         Grid.Column="0">
+                        <Label Text="Book Title"/>
+                        <Entry Text="{Binding OperatingBook.Name}"
+                               Placeholder="Enter the title of the book"
+                               Margin="0"
+                               BackgroundColor="#DAD1F9"/>
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Grid.Row="1"
+                                         Grid.Column="0">
+                        <Label Text="Author"/>
+                        <Entry Text="{Binding OperatingBook.Author}"
+                               Placeholder="Enter name of the book author"
+                               Margin="0"
+                               BackgroundColor="#DAD1F9"/>
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Grid.Row="2"
+                                         Grid.Column="0">
+                        <Label Text="Publishing Year"/>
+                        <Entry Text="{Binding OperatingBook.PublishingYear}"
+                               Placeholder="Enter the publishing year"
+                               Margin="0"
+                               BackgroundColor="#DAD1F9"
+                               Keyboard="Numeric"/>
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Grid.Row="3"
+                                         Grid.Column="0">
+                        <Label Text="Pages Count"/>
+                        <Entry Text="{Binding OperatingBook.PagesCount}"
+                               Placeholder="Enter the number of book pages"
+                               Margin="0"
+                               BackgroundColor="#DAD1F9"
+                               Keyboard="Numeric"/>
+                    </VerticalStackLayout>
+                    <VerticalStackLayout Grid.Row="4"
+                                         Grid.Column="0">
+                        <Label Text="Publishing Address"/>
+                        <Entry Text="{Binding OperatingBook.PublishingAddress}"
+                               Placeholder="Enter the publishing address"
+                               Margin="0"
+                               BackgroundColor="#DAD1F9"/>
+                    </VerticalStackLayout>
+
+                        <Button Grid.Row="5"
+                            Grid.ColumnSpan="2"
+                            Text="Add/Update Book"
+                            HorizontalOptions="Center"
+                            VerticalOptions="End"
+                            CornerRadius="4"
+                            Padding="50, 0"
+                            Command="{Binding SaveBookCommand}"
+                            >
+                            <Button.Triggers>
+                                <DataTrigger TargetType="Button" 
+                                         Binding="{Binding OperatingBook.Id}"
+                                         Value="0">
+                                    <Setter Property="Text" Value="Update Book"/>
+                                </DataTrigger>
+                            </Button.Triggers>
+                        </Button>
+                    </Grid>
+            </VerticalStackLayout>
+
+        </Grid>
+    </Grid>
+    </ScrollView>
+
+</ContentPage>
