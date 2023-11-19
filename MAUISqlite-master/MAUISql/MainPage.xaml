@@ -119,7 +119,16 @@
                                     CornerRadius="2"
                                     Command="{Binding Source={RelativeSource AncestorType={x:Type vm:BooksViewModel}}, Path=DeleteBookCommand}"
                                     CommandParameter="{Binding Id}" />
-                        </Grid>
+
+                                <Button Grid.Row="2"
+                                        Grid.Column="2"
+                                        Text="Map" 
+                                        Padding="0"
+                                        HeightRequest="25"
+                                        FontSize="12"
+                                        CornerRadius="2"
+                                        Clicked="ShowDestinationToPublishing" />
+                            </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
                 <CollectionView.EmptyView>

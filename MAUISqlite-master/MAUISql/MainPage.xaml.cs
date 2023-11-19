@@ -1,4 +1,5 @@
-﻿using MAUISql.ViewModels;
+﻿using MAUISql.Models;
+using MAUISql.ViewModels;
 
 namespace MAUISql;
 
@@ -30,6 +31,14 @@ public partial class MainPage : ContentPage
     {
 	    await Navigation.PushAsync(_serviceProvider.GetRequiredService<ContactsListPage>());
     }
+
+    private async void ShowDestinationToPublishing(object sender, EventArgs e)
+    {
+	    var book = ((Button)sender).BindingContext as Book;
+	    string address = book.PublishingAddress;
+
+	    await Navigation.PushAsync(new MapPage(address));
+	}
 
     private async void FilterPicker_OnSelectedIndexChanged(object sender, EventArgs e)
     {
